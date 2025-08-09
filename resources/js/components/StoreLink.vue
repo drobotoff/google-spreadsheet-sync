@@ -28,7 +28,7 @@ let link = ref();
 let isSyncClickFlag = ref(false); // Флаг для отслеживания клика по кнопке синхронизации
 
 onMounted(() => {
-    axios.get('/api/get-sync-link').then((response) => {
+    axios.get('api/get-sync-link').then((response) => {
         if (response.data['sync-link']) {
             link.value = response.data['sync-link'];
             isSyncClickFlag.value = true;
@@ -55,7 +55,7 @@ function openLink() {
         // Проверка, что это ссылка на гугл таблицу
         if (url.hostname === 'docs.google.com' && url.pathname.startsWith('/spreadsheets/')) {
             isSyncClickFlag.value = true; // Установка флага при клике на кнопку синхронизации
-            axios.post('/api/set-sync-link', {
+            axios.post('api/set-sync-link', {
                 "sync-link": link.value
             }).then((response) => {
                 console.log('Store link successfully')
@@ -72,7 +72,7 @@ function openLink() {
 }
 
 function clearLink() {
-    axios.post('/api/set-sync-link', {
+    axios.post('api/set-sync-link', {
         "sync-link": ''
     }).then((response) => {
         link.value = ''; // Очистка поля ввода при изменении ссылки

@@ -38,7 +38,7 @@ const handleShowModal = (params) => {
     show.value = false;
 
     if (params.id) {
-        axios.get('/api/read/' + params.id).then((res) => {
+        axios.get('api/read/' + params.id).then((res) => {
             dataItem = res.data;
             show.value = true;
         });
@@ -57,21 +57,21 @@ const handleShowModal = (params) => {
 const handleActionModal = (action, changedItem) => {
 
     if (action === 'create') {
-        axios.post('/api/create', changedItem).then(async () => {
+        axios.post('api/create', changedItem).then(async () => {
             await handleUpdateData();
             handleCloseModal();
         })
     }
 
     if (action === 'update') {
-        axios.put('/api/update/' + changedItem.id, changedItem).then(async () => {
+        axios.put('api/update/' + changedItem.id, changedItem).then(async () => {
             await handleUpdateData();
             handleCloseModal();
         })
     }
 
     if (action === 'delete') {
-        axios.delete('/api/delete/' + changedItem.id).then(async () => {
+        axios.delete('api/delete/' + changedItem.id).then(async () => {
             await handleUpdateData();
             handleCloseModal();
         })
