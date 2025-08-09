@@ -1,6 +1,53 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Тестовое задание
 
-# Laravel Docker Starter Kit
+Разработать сервис на Laravel 8+, который решает задачу синхронизации данных из БД с Google Таблицей (по одной модели/таблице).
+
+Demo: https://docs.google.com/spreadsheets/d/1gJ73rQ7iGuSFVLFoSXZoBT0fLxCl2rbLZNklsq-5UBY/edit
+
+# Требования
+
+1. Должен быть реализован CRUD интерфейс для 1 модели Eloquent (дизайн и стек фронта на ваше усмотрение)
+
+2. Одно из полей в модели должно быть поле status, тип enum, возможные значения [Allowed, Prohibited]
+
+3. Должна быть кнопка сгенерировать 1000 текстовых строк (с равномерным распределением значений поля статус)
+
+4. Должна быть кнопка полностью очистить таблицу.
+
+5. Должна быть возможность через интерфейс задать URL на документ google sheet (у документа будут права на редактирование любым пользователем)
+
+6. Система в автоматическом режиме должна выгружать/обновлять данные в указанном документе 1 раз в минуту. 
+
+7. Должны отправляться только строки со статусом Allowed. Для выборки используйте Local Scope.
+
+8. Если статус выгрузки изменился с Allowed на Prohibited, то строка из выгрузки удаляется. Если произошло наоборот - строка добавляется. При удалении из БД строка в таблице удаляется.
+
+9. Пользователь будет писать комментарии в дополнительном столбце в google документе (это n+1 столбец по-умолчанию, где n - кол-во столбцов в выгрузке). Необходимо, чтобы при очередном обновлении данных эти данные не затирались и “не съезжали” относительно своей строки, если записи добавились/удалились.
+
+10. В таблицу необходимо выводить все поля созданной модели.
+
+11. В системе должна быть реализована консольная команда, которая:
+
+    a. Получает данные из google таблицы 
+
+    b. Построчно выводит информацию об ИД модели / Комментарии из гугл таблицы в консоль
+
+    c. При этом в процессе в консоле отображается progressbar процесса
+
+    d. В команду можно передать параметр count, который ограничивает количество выводимых в консоль строк
+
+12. Должен быть реализован роут /fetch, который можно вызвать из браузера. 
+
+    a. При вызове должна быть запущена команда из п.11, и консольный вывод должен быть отображен в браузере в виде строки.
+    
+    b. Должна быть возможность вызвать роут с параметром, чтобы задать ограничение на количество выводимых данных (см. пункт 11d). Формат такого роута: /fetch/20
+
+## Замечание
+
+### Использован Laravel Docker Starter Kit
+
+https://github.com/refactorian/laravel-docker.git
+
 - Laravel v12.x
 - PHP v8.4.x
 - MySQL v8.1.x (default)
@@ -15,108 +62,3 @@
 - Vite v5.x
 - Rector v1.x
 - Redis v7.2.x
-
-# Requirements
-- Stable version of [Docker](https://docs.docker.com/engine/install/)
-- Compatible version of [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
-
-# How To Deploy
-
-### For first time only !
-- `git clone https://github.com/refactorian/laravel-docker.git`
-- `cd laravel-docker`
-- `docker compose up -d --build`
-- `docker compose exec php bash`
-- `composer setup`
-
-### From the second time onwards
-- `docker compose up -d`
-
-# Notes
-
-### Laravel Versions
-- [Laravel 12.x](https://github.com/refactorian/laravel-docker/tree/main)
-- [Laravel 11.x](https://github.com/refactorian/laravel-docker/tree/laravel_11x)
-- [Laravel 10.x](https://github.com/refactorian/laravel-docker/tree/laravel_10x)
-
-### Laravel App
-- URL: http://localhost
-
-### Mailpit
-- URL: http://localhost:8025
-
-### phpMyAdmin
-- URL: http://localhost:8080
-- Server: `db`
-- Username: `refactorian`
-- Password: `refactorian`
-- Database: `refactorian`
-
-### Adminer
-- URL: http://localhost:9090
-- Server: `db`
-- Username: `refactorian`
-- Password: `refactorian`
-- Database: `refactorian`
-
-### Basic docker compose commands
-- Build or rebuild services
-    - `docker compose build`
-- Create and start containers
-    - `docker compose up -d`
-- Stop and remove containers, networks
-    - `docker compose down`
-- Stop all services
-    - `docker compose stop`
-- Restart service containers
-    - `docker compose restart`
-- Run a command inside a container
-    - `docker compose exec [container] [command]`
-
-### Useful Laravel Commands
-- Display basic information about your application
-    - `php artisan about`
-- Remove the configuration cache file
-    - `php artisan config:clear`
-- Flush the application cache
-    - `php artisan cache:clear`
-- Clear all cached events and listeners
-    - `php artisan event:clear`
-- Delete all of the jobs from the specified queue
-    - `php artisan queue:clear`
-- Remove the route cache file
-    - `php artisan route:clear`
-- Clear all compiled view files
-    - `php artisan view:clear`
-- Remove the compiled class file
-    - `php artisan clear-compiled`
-- Remove the cached bootstrap files
-    - `php artisan optimize:clear`
-- Delete the cached mutex files created by scheduler
-    - `php artisan schedule:clear-cache`
-- Flush expired password reset tokens
-    - `php artisan auth:clear-resets`
-
-### Laravel Pint (Code Style Fixer | PHP-CS-Fixer)
-- Format all files
-    - `vendor/bin/pint`
-- Format specific files or directories
-    - `vendor/bin/pint app/Models`
-    - `vendor/bin/pint app/Models/User.php`
-- Format all files with preview
-    - `vendor/bin/pint -v`
-- Format uncommitted changes according to Git
-    - `vendor/bin/pint --dirty`
-- Inspect all files
-  - `vendor/bin/pint --test`
-
-### Rector
-- Dry Run
-    - `vendor/bin/rector process --dry-run`
-- Process
-    - `vendor/bin/rector process`
-
-# Alternatives
-- [Laravel Sail](https://laravel.com/docs/master/sail)
-- [Laravel Herd](https://herd.laravel.com/)
-- [Laradock](https://laradock.io/)
